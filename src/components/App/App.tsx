@@ -4,15 +4,21 @@ import Display from '../Display/Display'
 import Button from '../Button/Button'
 
 function App() {
-  const [counterValue, setCounterValue] = useState<number>(0)
-
+  const startCounterValue = 0 //начальное значение счётчика
   const maxCounterValue = 5 //максимальное значение счётчика
+  const step = 1 //шаг изменения
+
+  const [counterValue, setCounterValue] = useState<number>(startCounterValue)
 
   const incDisabled = counterValue === maxCounterValue
-  const resetDisabled = counterValue === 0
+  const resetDisabled = counterValue === startCounterValue
 
-  const changeCounterValueHandler = (changeNum: number, maxValue: number) => {
-    if (counterValue >= 0 && counterValue < maxValue) {
+  const changeCounterValueHandler = (
+    changeNum: number,
+    maxValue: number,
+    startValue: number
+  ) => {
+    if (counterValue >= startValue && counterValue < maxValue) {
       setCounterValue(counterValue + changeNum)
     }
   }
@@ -33,7 +39,11 @@ function App() {
               disabled={incDisabled}
               title={'inc'}
               onClickHandler={() =>
-                changeCounterValueHandler(1, maxCounterValue)
+                changeCounterValueHandler(
+                  step,
+                  maxCounterValue,
+                  startCounterValue
+                )
               }
             />
           </div>
