@@ -3,22 +3,12 @@ import React from 'react'
 type ButtonType = {
   onClickHandler: () => void
   title: string
-  disabled: boolean
-  disabledStyle: string
+  disabled?: boolean
 }
 
-const Button = ({
-  onClickHandler,
-  title,
-  disabled,
-  disabledStyle,
-}: ButtonType) => {
+const Button = ({ onClickHandler, title, disabled }: ButtonType) => {
   return (
-    <button
-      className={disabled ? disabledStyle : ''}
-      onClick={onClickHandler}
-      disabled={disabled}
-    >
+    <button onClick={onClickHandler} disabled={disabled}>
       {title}
     </button>
   )

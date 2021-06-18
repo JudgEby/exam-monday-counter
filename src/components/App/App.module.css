@@ -1,3 +1,7 @@
+* {
+    color: #2A2C35;
+}
+
 .App {
     display: flex;
     justify-content: center;
@@ -28,7 +32,7 @@
     font-weight: bold;
 }
 
-.display .max {
+.display.max div {
     color: #e3282e;
 }
 
@@ -49,8 +53,9 @@
     outline: none;
     font-size: 40px;
     font-weight: bold;
+    cursor: pointer;
 }
 
-.buttonsBlock button.disabled {
+.buttonsBlock .disabled button {
     opacity: 0.5;
 }

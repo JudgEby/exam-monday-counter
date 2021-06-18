@@ -4,9 +4,10 @@ import Display from '../Display/Display'
 import Button from '../Button/Button'
 
 function App() {
-  const [counterValue, setCounterValue] = useState(0)
+  const [counterValue, setCounterValue] = useState<number>(0)
 
   const maxCounterValue = 5 //максимальное значение счётчика
+
   const incDisabled = counterValue === maxCounterValue
   const resetDisabled = counterValue === 0
 
@@ -19,26 +20,30 @@ function App() {
   return (
     <div className={style.App}>
       <div className={style.container}>
-        <div className={style.display}>
-          <Display
-            value={counterValue}
-            maxValue={maxCounterValue}
-            maxStyle={style.max}
-          />
+        <div
+          className={`${style.display} ${
+            counterValue === maxCounterValue ? style.max : ''
+          }`}
+        >
+          <Display value={counterValue} />
         </div>
         <div className={style.buttonsBlock}>
-          <Button
-            disabledStyle={style.disabled}
-            disabled={incDisabled}
-            title={'inc'}
-            onClickHandler={() => changeCounterValueHandler(1, maxCounterValue)}
-          />
-          <Button
-            disabledStyle={style.disabled}
-            disabled={resetDisabled}
-            title={'reset'}
-            onClickHandler={() => setCounterValue(0)}
-          />
+          <div className={incDisabled ? style.disabled : ''}>
+            <Button
+              disabled={incDisabled}
+              title={'inc'}
+              onClickHandler={() =>
+                changeCounterValueHandler(1, maxCounterValue)
+              }
+            />
+          </div>
+          <div className={resetDisabled ? style.disabled : ''}>
+            <Button
+              disabled={resetDisabled}
+              title={'reset'}
+              onClickHandler={() => setCounterValue(0)}
+            />
+          </div>
         </div>
       </div>
     </div>
