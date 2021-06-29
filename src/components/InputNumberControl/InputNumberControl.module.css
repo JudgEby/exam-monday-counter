@@ -1,0 +1,15 @@
+.input {
+    width: 70px;
+    height: 30px;
+    border: 3px solid #2A2C35;
+    outline:none;
+    border-radius: 7px;
+    background-color: #63DAFC;
+    font-size: 30px;
+    text-align: center;
+}
+
+.error {
+    border-color: #e3282e;
+    background-color: #b16666;
+}

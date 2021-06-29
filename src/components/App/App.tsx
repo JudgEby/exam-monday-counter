@@ -2,16 +2,30 @@ import React, { useState } from 'react'
 import style from './App.module.css'
 import Display from '../Display/Display'
 import Button from '../Button/Button'
+import InputNumberControl from '../InputNumberControl/InputNumberControl'
 
 function App() {
-  const startCounterValue = 0 //начальное значение счётчика
-  const maxCounterValue = 5 //максимальное значение счётчика
+  const [startCounterValue, setStartCounterValue] = useState(0) //начальное значение счётчика
+  const [maxCounterValue, setMaxCounterValue] = useState(1) //максимальное значение счётчика
   const step = 1 //шаг изменения
 
   const [counterValue, setCounterValue] = useState<number>(startCounterValue)
 
+  const [setButtonDisabled, setSetButtonDisabled] = useState(false)
   const incDisabled = counterValue === maxCounterValue
   const resetDisabled = counterValue === startCounterValue
+
+  let startInputError = false
+  let maxInputError = false
+
+  if (startCounterValue < 0) {
+    startInputError = true
+  }
+
+  if (maxCounterValue <= startCounterValue) {
+    startInputError = true
+    maxInputError = true
+  }
 
   const changeCounterValueHandler = (
     changeNum: number,
@@ -26,18 +40,67 @@ function App() {
   return (
     <div className={style.App}>
       <div className={style.container}>
+        <div className={style.controlDisplay}>
+          <div className={style.controlDisplayTitles}>
+            <span>max value</span>
+            <span>start value</span>
+          </div>
+          <div className={style.controlDisplayInputs}>
+            <InputNumberControl
+              value={maxCounterValue}
+              onChange={setMaxCounterValue}
+              setSetButtonDisabled={setSetButtonDisabled}
+              error={maxInputError}
+            />
+            <InputNumberControl
+              value={startCounterValue}
+              onChange={setStartCounterValue}
+              setSetButtonDisabled={setSetButtonDisabled}
+              error={startInputError}
+            />
+          </div>
+        </div>
+        <div className={style.setButtonBlock}>
+          <div
+            className={
+              setButtonDisabled || startInputError || maxInputError
+                ? style.disabled
+                : ''
+            }
+          >
+            <Button
+              disabled={setButtonDisabled || startInputError || maxInputError}
+              title={'set'}
+              onClickHandler={() => {
+                setCounterValue(startCounterValue)
+                setSetButtonDisabled(true)
+              }}
+            />
+          </div>
+        </div>
+      </div>
+      <div className={style.container}>
         <div
           className={`${style.display} ${
-            counterValue === maxCounterValue ? style.max : ''
+            counterValue === maxCounterValue &&
+            startCounterValue !== maxCounterValue
+              ? style.max
+              : ''
           }`}
         >
-          <Display value={counterValue} />
+          <Display
+            value={
+              setButtonDisabled ? counterValue : 'enter value and press "set"'
+            }
+          />
         </div>
         <div className={style.buttonsBlock}>
-          <div className={incDisabled ? style.disabled : ''}>
+          <div
+            className={incDisabled || !setButtonDisabled ? style.disabled : ''}
+          >
             <Button
-              disabled={incDisabled}
-              title={'inc'}
+              disabled={incDisabled || !setButtonDisabled}
+              title={'ine'}
               onClickHandler={() =>
                 changeCounterValueHandler(
                   step,
@@ -47,11 +110,15 @@ function App() {
               }
             />
           </div>
-          <div className={resetDisabled ? style.disabled : ''}>
+          <div
+            className={
+              resetDisabled || !setButtonDisabled ? style.disabled : ''
+            }
+          >
             <Button
-              disabled={resetDisabled}
+              disabled={resetDisabled || !setButtonDisabled}
               title={'reset'}
-              onClickHandler={() => setCounterValue(0)}
+              onClickHandler={() => setCounterValue(startCounterValue)}
             />
           </div>
         </div>
