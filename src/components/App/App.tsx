@@ -111,16 +111,22 @@ function App() {
       <div className={style.container}>
         <div
           className={`${style.display} ${
-            counterValue === maxCounterValue &&
-            startCounterValue !== maxCounterValue &&
-            setButtonDisabled
+            (counterValue === maxCounterValue &&
+              startCounterValue !== maxCounterValue &&
+              setButtonDisabled) ||
+            startInputError ||
+            maxInputError
               ? style.max
               : ''
           }`}
         >
           <Display
             value={
-              setButtonDisabled ? counterValue : 'enter value and press "set"'
+              setButtonDisabled
+                ? counterValue
+                : startInputError || maxInputError
+                ? 'Incorrect value!'
+                : 'enter value and press "set"'
             }
           />
         </div>
