@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import style from './App.module.css'
 import Display from '../Display/Display'
 import Button from '../Button/Button'
@@ -12,6 +12,35 @@ function App() {
   const [counterValue, setCounterValue] = useState<number>(startCounterValue)
 
   const [setButtonDisabled, setSetButtonDisabled] = useState(false)
+
+  useEffect(() => {
+    const valuesAsString = localStorage.getItem('localValues')
+    if (valuesAsString) {
+      const {
+        startCounterValue,
+        maxCounterValue,
+        counterValue,
+        setButtonDisabled,
+      } = JSON.parse(valuesAsString)
+      setStartCounterValue(startCounterValue)
+      setMaxCounterValue(maxCounterValue)
+      setCounterValue(counterValue)
+      setSetButtonDisabled(setButtonDisabled)
+    }
+  }, [])
+
+  useEffect(() => {
+    localStorage.setItem(
+      'localValues',
+      JSON.stringify({
+        startCounterValue: startCounterValue,
+        maxCounterValue: maxCounterValue,
+        counterValue: counterValue,
+        setButtonDisabled: setButtonDisabled,
+      })
+    )
+  }, [startCounterValue, maxCounterValue, counterValue, setButtonDisabled])
+
   const incDisabled = counterValue === maxCounterValue
   const resetDisabled = counterValue === startCounterValue
 
@@ -83,7 +112,8 @@ function App() {
         <div
           className={`${style.display} ${
             counterValue === maxCounterValue &&
-            startCounterValue !== maxCounterValue
+            startCounterValue !== maxCounterValue &&
+            setButtonDisabled
               ? style.max
               : ''
           }`}
