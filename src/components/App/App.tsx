@@ -1,45 +1,29 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import style from './App.module.css'
 import Display from '../Display/Display'
 import Button from '../Button/Button'
 import InputNumberControl from '../InputNumberControl/InputNumberControl'
+import { useDispatch, useSelector } from 'react-redux'
+import { AppStateType } from '../../redux/store'
+import {
+  CounterType,
+  setCounterValueActionCreator,
+  setMaxCounterValueActionCreator,
+  setSetButtonDisabledActionCreator,
+  setStartCounterValueActionCreator,
+} from '../../redux/counter-reducer'
 
 function App() {
-  const [startCounterValue, setStartCounterValue] = useState(0) //начальное значение счётчика
-  const [maxCounterValue, setMaxCounterValue] = useState(1) //максимальное значение счётчика
-  const step = 1 //шаг изменения
+  const step = 1
 
-  const [counterValue, setCounterValue] = useState<number>(startCounterValue)
+  const {
+    counterValue,
+    startCounterValue,
+    maxCounterValue,
+    setButtonDisabled,
+  } = useSelector<AppStateType, CounterType>((state) => state.counter) // получаем стейт из провайдера react-redux
 
-  const [setButtonDisabled, setSetButtonDisabled] = useState(false)
-
-  useEffect(() => {
-    const valuesAsString = localStorage.getItem('localValues')
-    if (valuesAsString) {
-      const {
-        startCounterValue,
-        maxCounterValue,
-        counterValue,
-        setButtonDisabled,
-      } = JSON.parse(valuesAsString)
-      setStartCounterValue(startCounterValue)
-      setMaxCounterValue(maxCounterValue)
-      setCounterValue(counterValue)
-      setSetButtonDisabled(setButtonDisabled)
-    }
-  }, [])
-
-  useEffect(() => {
-    localStorage.setItem(
-      'localValues',
-      JSON.stringify({
-        startCounterValue: startCounterValue,
-        maxCounterValue: maxCounterValue,
-        counterValue: counterValue,
-        setButtonDisabled: setButtonDisabled,
-      })
-    )
-  }, [startCounterValue, maxCounterValue, counterValue, setButtonDisabled])
+  const dispatch = useDispatch() // получаем функцию диспатч из react-redux
 
   const incDisabled = counterValue === maxCounterValue
   const resetDisabled = counterValue === startCounterValue
@@ -62,8 +46,24 @@ function App() {
     startValue: number
   ) => {
     if (counterValue >= startValue && counterValue < maxValue) {
-      setCounterValue(counterValue + changeNum)
+      dispatch(setCounterValueActionCreator(counterValue + changeNum))
     }
+  }
+
+  const setCounterValue = (value: number) => {
+    dispatch(setCounterValueActionCreator(value))
+  }
+
+  const setStartCounterValue = (value: number) => {
+    dispatch(setStartCounterValueActionCreator(value))
+  }
+
+  const setMaxCounterValue = (value: number) => {
+    dispatch(setMaxCounterValueActionCreator(value))
+  }
+
+  const setSetButtonDisabled = (value: boolean) => {
+    dispatch(setSetButtonDisabledActionCreator(value))
   }
 
   return (
@@ -136,7 +136,7 @@ function App() {
           >
             <Button
               disabled={incDisabled || !setButtonDisabled}
-              title={'ine'}
+              title={'inc'}
               onClickHandler={() =>
                 changeCounterValueHandler(
                   step,
